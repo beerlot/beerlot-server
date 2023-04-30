@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/beerlot_db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: adminadmin
+
+  batch:
+    jdbc:
+      initialize-schema: always

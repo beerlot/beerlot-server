@@ -2,10 +2,14 @@ package com.beerlot.pipeline.writer;
 
 import com.beerlot.domain.beer.Beer;
 import com.beerlot.domain.beer.BeerInternational;
-import com.beerlot.domain.category.Category;
+import com.beerlot.domain.brewery.Brewery;
+import com.beerlot.domain.brewery.BreweryInternational;
+import com.beerlot.domain.brewery.BreweryInternationalId;
 import com.beerlot.domain.category.CategoryInternational;
 import com.beerlot.domain.common.entity.LanguageType;
 import com.beerlot.pipeline.repository.BeerRepository;
+import com.beerlot.pipeline.repository.BreweryInternationalRepository;
+import com.beerlot.pipeline.repository.BreweryRepository;
 import com.beerlot.pipeline.repository.CategoryInternationalRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -13,6 +17,7 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 @Slf4j
@@ -26,6 +31,12 @@ public class BeerItemWriter implements ItemWriter<Map<String, String>> {
     @Autowired
     private CategoryInternationalRepository categoryInternationalRepository;
 
+    @Autowired
+    private BreweryRepository breweryRepository;
+
+    @Autowired
+    private BreweryInternationalRepository breweryInternationalRepository;
+
     @Override
     public void write(List<? extends Map<String, String>> items) throws Exception {
         for (Map<String, String> item : items) {
@@ -35,20 +46,24 @@ public class BeerItemWriter implements ItemWriter<Map<String, String>> {
                 continue;
             }
 
-            Category category = categoryInternational.getCategory();
+            List<BreweryInternational> breweries = breweryInternationalRepository
+                    .findBreweriesInternationalsByNameLike(item.get("Brewery"));
 
-            if (category == null) {
-                System.out.println("Category 가 null 입니다.");
-                continue;
+            Brewery targetBrewery = null;
+            if (breweries == null || breweries.isEmpty()) {
+                targetBrewery = createBrewery(item.get("Brewery"), "http://naver.com");
+            } else {
+                targetBrewery = breweries.get(0).getBrewery();
             }
 
             Beer beer = Beer.builder()
-                    .category(category)
+                    .category(categoryInternational.getCategory())
                     .volume(Float.parseFloat(item.get("Volume")))
                     .imageUrl(item.get("ImageUrl"))
                     .calorie(Integer.parseInt(item.get("Calorie")))
                     .calorieUnit(Integer.parseInt(item.get("CalorieUnit")))
-                    .brewery(item.get("Brewery"))
+                    .brewery(targetBrewery)
+                    .beerInternationals(new ArrayList<>())
                     .build();
 
             for (LanguageType type : LanguageType.values()) {
@@ -64,5 +79,32 @@ public class BeerItemWriter implements ItemWriter<Map<String, String>> {
 
             beerRepository.save(beer);
         }
+    }
+
+    private Brewery createBrewery(String name, String imageUrl) {
+        Brewery brewery = Brewery.builder()
+                .imageUrl(imageUrl)
+                .build();
+
+        Brewery savedBrewery = breweryRepository.save(brewery);
+
+        BreweryInternational breweryInternationalKR = BreweryInternational
+                .builder()
+                .brewery(savedBrewery)
+                .breweryInternationalId(new BreweryInternationalId(savedBrewery.getBreweryId(), LanguageType.KR))
+                .name(name)
+                .build();
+
+        BreweryInternational breweryInternationalEN = BreweryInternational
+                .builder()
+                .brewery(savedBrewery)
+                .breweryInternationalId(new BreweryInternationalId(savedBrewery.getBreweryId(), LanguageType.EN))
+                .name(name)
+                .build();
+
+        breweryInternationalRepository.save(breweryInternationalKR);
+        breweryInternationalRepository.save(breweryInternationalEN);
+
+        return brewery;
     }
 }

@@ -54,7 +54,7 @@ public class Beer extends CreateAndUpdateDateTime {
     @OneToMany(mappedBy = "beer")
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "beer")
+    @OneToMany(mappedBy = "beer", cascade = CascadeType.PERSIST)
     private List<BeerInternational> beerInternationals = new ArrayList<>();
 
     @OneToMany(mappedBy = "beer")
@@ -99,7 +99,8 @@ public class Beer extends CreateAndUpdateDateTime {
 
     @Builder
     public Beer(Long id, Float volume, Category category, String imageUrl, Set<String> buyFrom,
-                OffsetDateTime createdAt, OffsetDateTime updatedAt, List<BeerInternational> beerInternationals) {
+                OffsetDateTime createdAt, OffsetDateTime updatedAt, List<BeerInternational> beerInternationals,
+                Integer calorie, Integer calorieUnit, Brewery brewery) {
         this.id = id;
         this.volume = volume;
         this.category = category;
@@ -108,6 +109,9 @@ public class Beer extends CreateAndUpdateDateTime {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.beerInternationals = beerInternationals;
+        this.calorie = calorie;
+        this.calorieUnit = calorieUnit;
+        this.brewery = brewery;
     }
 }
 

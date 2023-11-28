@@ -8,8 +8,8 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 @Component
 @StepScope
@@ -20,8 +20,8 @@ public class ParseHeaderTasklet implements Tasklet {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        Scanner scanner = new Scanner(new File(filePath));
-        String header = scanner.next();
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        String header = br.readLine();
 
         if (header == null) {
             throw new IllegalArgumentException("헤더가 존재하지 않습니다.");

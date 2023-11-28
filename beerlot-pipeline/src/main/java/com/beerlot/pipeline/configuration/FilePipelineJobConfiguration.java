@@ -71,10 +71,10 @@ public class FilePipelineJobConfiguration {
         itemReader.setResource(new FileSystemResource(new File(filePath)));
 
         DefaultLineMapper<Map<String, String>> defaultLineMapper = new DefaultLineMapper<>();
-        DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer(",");
+        DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer("\t");
         defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
 
-        String[] headers = header.split(",");
+        String[] headers = header.split("\t");
         delimitedLineTokenizer.setNames(headers);
 
         // 첫줄 헤더는 미리 읽었으므로 넘어간다.

@@ -49,7 +49,7 @@ public class BeerService {
         return beerRepository.findBySearch(keyword, categories, countries, volumeMin, volumeMax, language, pageRequest);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Beer findBeerById(Long id) {
         return beerRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(ErrorMessage.BEER__NOT_EXIST.getMessage()));

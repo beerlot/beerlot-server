@@ -106,7 +106,7 @@ public class ReviewService {
         return reviewRepository.findAll(pageRequest, language);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Review findById(Long reviewId) {
         return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException(ErrorMessage.REVIEW__NOT_FOUND.getMessage()));

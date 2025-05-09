@@ -65,6 +65,9 @@ public class SecurityConfig {
                 .authorizeRequests()
                     .antMatchers("swagger/**","/swagger-ui/**","/swagger-ui.html","/webjars/**","/swagger-resources/**","/configuration/**","/v3/api-docs/**", "/docs").permitAll()
 
+                    // ===== Permit All ===== //
+                    .antMatchers(HttpMethod.POST, "/api/v1/members/check-username").permitAll()
+
                     // ===== Permit Role Guest ===== //
                     .antMatchers(HttpMethod.PATCH, "/api/v1/auth/signup").hasRole("GUEST")
                     .antMatchers("/api/v1/files/profile").hasRole("GUEST")
@@ -85,7 +88,6 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET, "/api/v1/beers/**", "/api/v1/reviews/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/v1/breweries/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/members/status").permitAll()
-                    .antMatchers(HttpMethod.POST, "/api/v1/members/check-username").permitAll()
 
                     .anyRequest().authenticated();
 

@@ -86,7 +86,7 @@ public class Beer extends CreateAndUpdateDateTime {
     }
 
     public void calculateRate(float rate) {
-        this.rate = rate > 0 ? (this.rate * (reviewCount - 1) + rate) / reviewCount : (this.rate * (reviewCount + 1) + rate) / reviewCount;
+        this.rate = rate > 0 ? (this.rate * (reviewCount - 1) + rate) / Math.min(reviewCount, 1) : (this.rate * (reviewCount + 1) + rate) / Math.min(reviewCount, 1);
     }
 
     public void addBuyFrom(String buyFrom) {

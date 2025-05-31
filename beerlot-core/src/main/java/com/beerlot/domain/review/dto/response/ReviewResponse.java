@@ -1,6 +1,5 @@
 package com.beerlot.domain.review.dto.response;
 
-import com.beerlot.domain.common.entity.LanguageType;
 import com.beerlot.domain.member.dto.response.MemberResponse;
 import com.beerlot.domain.review.Review;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,6 +30,9 @@ public class ReviewResponse {
     @JsonProperty("updated_at")
     private OffsetDateTime updatedAt;
 
+    @JsonProperty("created_at")
+    private OffsetDateTime createdAt;
+
     @JsonProperty("buy_from")
     private String buyFrom;
 
@@ -43,12 +45,13 @@ public class ReviewResponse {
 
     @Builder
     public ReviewResponse(Long id, String content, String imageUrl, Float rate, Long likeCount,
-                          OffsetDateTime updatedAt, String buyFrom, MemberResponse member, BeerResponse beer) {
+                          OffsetDateTime createdAt, OffsetDateTime updatedAt, String buyFrom, MemberResponse member, BeerResponse beer) {
         this.id = id;
         this.content = content;
         this.imageUrl = imageUrl;
         this.rate = rate;
         this.likeCount = likeCount;
+        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.buyFrom = buyFrom;
         this.member = member;
@@ -62,6 +65,7 @@ public class ReviewResponse {
                 .imageUrl(review.getImageUrl())
                 .rate(review.getRate())
                 .likeCount(review.getLikeCount())
+                .createdAt(review.getCreatedAt())
                 .updatedAt(review.getUpdatedAt())
                 .buyFrom(review.getBuyFrom())
                 .member(MemberResponse.of(review.getMember()))

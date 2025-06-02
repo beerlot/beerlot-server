@@ -24,6 +24,9 @@ public class ReviewArchiveResponse {
     @JsonProperty("like_count")
     private Long likeCount;
 
+    @JsonProperty("created_at")
+    private OffsetDateTime createdAt;
+
     @JsonProperty("updated_at")
     private OffsetDateTime updatedAt;
 

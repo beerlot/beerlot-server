@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort.Direction;
 @AllArgsConstructor
 public enum ReviewSortType implements SortType {
     RECENTLY_UPDATED("updatedAt", Direction.DESC),
-    RECENTLY_CREATEED("createdAt", Direction.DESC),
+    RECENTLY_CREATED("createdAt", Direction.DESC),
     MOST_LIKES("likeCount", Direction.DESC),
     HIGH_RATE("rate", Direction.DESC),
     LOW_RATE("rate", Direction.ASC)

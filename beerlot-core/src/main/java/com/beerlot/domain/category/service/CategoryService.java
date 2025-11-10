@@ -3,6 +3,7 @@ package com.beerlot.domain.category.service;
 import com.beerlot.domain.category.Category;
 import com.beerlot.domain.category.CategoryInternational;
 import com.beerlot.domain.category.CategoryInternationalId;
+import com.beerlot.domain.category.dto.response.CategoryPediaResponse;
 import com.beerlot.domain.category.dto.response.CategoryResponse;
 import com.beerlot.domain.category.dto.response.CategorySearchResponse;
 import com.beerlot.domain.category.repository.CategoryInternationalCustomRepository;
@@ -52,6 +53,15 @@ public class CategoryService {
         return categoryInternationalCustomRepository.findByNameAndLanguageType(name, language)
                 .stream()
                 .map(CategorySearchResponse::of)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryPediaResponse> getCategoryDetail(Long categoryId, LanguageType language) {
+        List<CategoryInternational> foundCategories = categoryInternationalRepository.findByCategoryIdAndLanguage(categoryId, language);
+
+        return foundCategories.stream()
+                .map(CategoryPediaResponse::of)
                 .toList();
     }
 }

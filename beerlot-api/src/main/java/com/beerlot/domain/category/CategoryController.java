@@ -1,13 +1,11 @@
 package com.beerlot.domain.category;
 
+import com.beerlot.domain.category.dto.response.CategoryPediaResponse;
 import com.beerlot.domain.category.dto.response.CategorySearchResponse;
 import com.beerlot.domain.category.service.CategoryService;
 import com.beerlot.domain.common.entity.LanguageType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +22,14 @@ public class CategoryController {
             @RequestParam("language") LanguageType languageType) {
 
         return categoryService.getCategoryByName(name, languageType);
+    }
+
+    @GetMapping(value = "/{id}")
+    public List<CategoryPediaResponse> getCategoryDetail(
+            @PathVariable("id") Long categoryId,
+            @RequestParam("language") LanguageType languageType) {
+
+        return categoryService.getCategoryDetail(categoryId, languageType);
+
     }
 }

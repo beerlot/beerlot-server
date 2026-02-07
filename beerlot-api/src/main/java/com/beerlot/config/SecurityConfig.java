@@ -86,6 +86,7 @@ public class SecurityConfig {
                     // ===== Permit All ===== //
                     .antMatchers(HttpMethod.GET, "/api/v1/policies/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/v1/beers/**", "/api/v1/reviews/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/v1/category/**", "/api/v1/glassware/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/v1/breweries/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/members/status").permitAll()
 

@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public class ReviewRequest {
 
-    @JsonProperty("content")
+    @JsonProperty(value = "content", required = true)
     private String content;
 
     @JsonProperty(value = "rate", required = true)

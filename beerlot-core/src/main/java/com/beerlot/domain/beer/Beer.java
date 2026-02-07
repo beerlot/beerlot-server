@@ -1,5 +1,6 @@
 package com.beerlot.domain.beer;
 
+import com.beerlot.domain.brewery.Brewery;
 import com.beerlot.domain.category.Category;
 import com.beerlot.domain.common.entity.CreateAndUpdateDateTime;
 import com.beerlot.domain.review.BuyFromConverter;
@@ -32,8 +33,9 @@ public class Beer extends CreateAndUpdateDateTime {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Column(name = "brewery", nullable = false)
-    private String brewery;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brewery_id")
+    private Brewery brewery;
 
     @Column(name = "calorie")
     private Integer calorie;
@@ -52,7 +54,7 @@ public class Beer extends CreateAndUpdateDateTime {
     @OneToMany(mappedBy = "beer")
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "beer")
+    @OneToMany(mappedBy = "beer", cascade = CascadeType.PERSIST)
     private List<BeerInternational> beerInternationals = new ArrayList<>();
 
     @OneToMany(mappedBy = "beer")
@@ -97,7 +99,8 @@ public class Beer extends CreateAndUpdateDateTime {
 
     @Builder
     public Beer(Long id, Float volume, Category category, String imageUrl, Set<String> buyFrom,
-                OffsetDateTime createdAt, OffsetDateTime updatedAt, List<BeerInternational> beerInternationals) {
+                OffsetDateTime createdAt, OffsetDateTime updatedAt, List<BeerInternational> beerInternationals,
+                Integer calorie, Integer calorieUnit, Brewery brewery) {
         this.id = id;
         this.volume = volume;
         this.category = category;
@@ -106,6 +109,9 @@ public class Beer extends CreateAndUpdateDateTime {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.beerInternationals = beerInternationals;
+        this.calorie = calorie;
+        this.calorieUnit = calorieUnit;
+        this.brewery = brewery;
     }
 }
 

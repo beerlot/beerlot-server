@@ -24,8 +24,8 @@ public class BucketUtils {
     @Value("${spring.cloud.gcp.storage.access-base-url}")
     private String accessBaseUrl;
 
-    @Value("${spring.cloud.gcp.storage.bucket-name}")
-    private String bucketName;
+    @Value("${spring.cloud.gcp.storage.image-bucket-suffix}")
+    private String bucketSuffix;
 
     public String uploadFile(FileDirectoryType fileDirectory, MultipartFile multipartFile) {
         try {
@@ -33,9 +33,9 @@ public class BucketUtils {
 
             String filename = multipartFile.getOriginalFilename();
 
-            String objectName = fileDirectory.getDirectoryName()
-                    + "/"
-                    + filename
+            String bucketName = fileDirectory.getDirectoryName() + '-' + bucketSuffix;
+
+            String objectName = filename
                     + "-"
                     + new Timestamp(System.currentTimeMillis()).getTime();
 

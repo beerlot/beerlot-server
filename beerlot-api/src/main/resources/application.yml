@@ -4,9 +4,3 @@ spring:
       hibernate:
         jdbc:
           time_zone: GMT
-
-recommend:
-  table: recommend
-  user_id_column: member_id
-  item_id_column: item_id
-  pref_column: value

@@ -23,10 +23,12 @@ public enum ProviderType {
     }),
 
     NAVER("naver", (attributes) -> {
+        String email = attributes.get("email").toString();
+
         OAuthUserPrincipal userPrincipal = OAuthUserPrincipal.builder()
                 .id(attributes.get("id").toString())
-                .email(attributes.get("email").toString())
-                .username(attributes.get("name").toString())
+                .email(email)
+                .username(attributes.containsKey("name") ? attributes.get("name").toString() : email.split("@")[0])
                 .imageUrl(attributes.get("profile_image").toString())
                 .provider("naver")
                 .roles(Set.of(RoleType.GUEST))

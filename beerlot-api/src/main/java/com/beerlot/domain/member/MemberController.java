@@ -7,8 +7,13 @@ import com.beerlot.domain.beer.service.BeerService;
 import com.beerlot.domain.common.entity.LanguageType;
 import com.beerlot.domain.common.page.PageCustom;
 import com.beerlot.domain.common.page.PageCustomRequest;
+import com.beerlot.domain.member.dto.request.CheckUsernameRequest;
 import com.beerlot.domain.member.dto.request.MemberProfileRequest;
+import com.beerlot.domain.member.dto.request.MemberStatusRequest;
+import com.beerlot.domain.member.dto.response.CheckUsernameResponse;
+import com.beerlot.domain.member.dto.response.MemberExitResponse;
 import com.beerlot.domain.member.dto.response.MemberResponse;
+import com.beerlot.domain.member.dto.response.MemberStatusResponse;
 import com.beerlot.domain.member.service.MemberService;
 import com.beerlot.domain.review.ReviewSortType;
 import com.beerlot.domain.review.dto.response.ReviewArchiveResponse;
@@ -46,6 +51,14 @@ public class MemberController implements MemberApi {
     }
 
     @Override
+    public ResponseEntity<MemberStatusResponse> getMemberStatus(MemberStatusRequest memberStatusRequest) {
+        return new ResponseEntity<>(
+                memberService.getMemberStatus(memberStatusRequest),
+                HttpStatus.OK
+        );
+    }
+
+    @Override
     public ResponseEntity<PageCustom<ReviewArchiveResponse>> getAllReviews(OAuthUserPrincipal userPrincipal,
                                                                            Integer page,
                                                                            Integer size,
@@ -59,13 +72,13 @@ public class MemberController implements MemberApi {
     }
 
     @Override
-    public ResponseEntity<PageCustom<BeerSimpleResponse>> getAllBeers(OAuthUserPrincipal userPrincipal,
-                                                                        Integer page,
-                                                                        Integer size,
-                                                                        BeerSortType sort,
-                                                                        LanguageType language) {
+    public ResponseEntity<PageCustom<BeerSimpleResponse>> getAllLikedBeers(OAuthUserPrincipal userPrincipal,
+                                                                           Integer page,
+                                                                           Integer size,
+                                                                           BeerSortType sort,
+                                                                           LanguageType language) {
         return new ResponseEntity<>(
-                beerService.getBeersByMember(userPrincipal.getOauthId(),
+                beerService.getBeerLikesByMember(userPrincipal.getOauthId(),
                                              new PageCustomRequest(page, size, sort),
                                              language),
                 HttpStatus.OK);
@@ -74,9 +87,20 @@ public class MemberController implements MemberApi {
     @Override
     public ResponseEntity<List<Long>> getAllLikedReviews(OAuthUserPrincipal userPrincipal) {
         List<Long> reviewIds = reviewLikeService.getReviewLikesByMember(userPrincipal.getOauthId());
-        if (reviewIds.size() == 0) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         return new ResponseEntity<>(reviewIds, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<CheckUsernameResponse> checkDuplicateUsername(CheckUsernameRequest checkUsernameRequest) {
+        CheckUsernameResponse checkUsernameResponse = memberService.checkDuplicateUsername(checkUsernameRequest);
+
+        return new ResponseEntity<>(checkUsernameResponse, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<MemberExitResponse> exitUser(OAuthUserPrincipal userPrincipal) {
+        MemberExitResponse memberExitResponse = memberService.exitUser(userPrincipal);
+
+        return new ResponseEntity<>(memberExitResponse, HttpStatus.OK);
     }
 }

@@ -18,6 +18,9 @@ public class MemberResponse {
     @JsonProperty("username")
     private String username;
 
+    @JsonProperty("email")
+    private String email;
+
     @JsonProperty("image_url")
     private String imageUrl;
 
@@ -28,9 +31,10 @@ public class MemberResponse {
     private OffsetDateTime usernameUpdatedAt;
 
     @Builder
-    public MemberResponse (Long id, String username, String imageUrl, String statusMessage, OffsetDateTime usernameUpdatedAt) {
+    public MemberResponse (Long id, String username, String email, String imageUrl, String statusMessage, OffsetDateTime usernameUpdatedAt) {
         this.id = id;
         this.username = username;
+        this.email = email;
         this.imageUrl = imageUrl;
         this.statusMessage = statusMessage;
         this.usernameUpdatedAt = usernameUpdatedAt;
@@ -40,6 +44,7 @@ public class MemberResponse {
         return MemberResponse.builder()
                 .id(member.getId())
                 .username(member.getUsername())
+                .email(member.getEmail())
                 .imageUrl(member.getImageUrl())
                 .statusMessage(member.getStatusMessage())
                 .usernameUpdatedAt(member.getUsernameUpdatedAt())

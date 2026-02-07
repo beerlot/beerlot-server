@@ -4,6 +4,7 @@ import com.beerlot.domain.auth.security.oauth.entity.OAuthUserPrincipal;
 import com.beerlot.domain.auth.security.oauth.entity.ProviderType;
 import com.beerlot.domain.member.Member;
 import com.beerlot.domain.member.service.MemberService;
+import com.beerlot.exception.ConflictException;
 import com.beerlot.exception.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -40,11 +42,22 @@ public class OAuthService extends DefaultOAuth2UserService implements UserDetail
         // 4: Check if registered user
         try {
             Member member = memberService.findMemberByOauthId(oAuthUserPrincipal.getId());
+            if (!member.isActive()) {
+                // if member exited before, change member status to active
+                memberService.updateStatusToActive(member);
+            }
+
             memberService.updateEmail(member, oAuthUserPrincipal.getEmail());
             return OAuthUserPrincipal.of(member);
         } catch (NoSuchElementException e) {
-            long count = memberService.countByUsername(oAuthUserPrincipal.getUsername());
-            oAuthUserPrincipal.setUsername(oAuthUserPrincipal.getUsername() + String.valueOf(count + 1));
+            // if email exists, a user already signed up with other provider
+            Optional<Member> maybeMemberByEmail = memberService.findMemberByEmail(oAuthUserPrincipal.getEmail());
+            if (maybeMemberByEmail.isPresent()) {
+                throw new ConflictException(ErrorMessage.MEMBER__ALREADY_SIGNED_UP.getMessage());
+            }
+
+            oAuthUserPrincipal.setUsername("USER_" + System.nanoTime());
+
             memberService.createMember(oAuthUserPrincipal);
             return oAuthUserPrincipal;
         }

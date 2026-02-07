@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -63,5 +65,9 @@ public class BeerLikeService {
         } else if (!isPositive && !beerLikeRepository.existsByBeer_IdAndMember_Id(beerId, memberId)) {
             throw new NoSuchElementException(ErrorMessage.BEER_LIKE__NOT_FOUND.getMessage());
         }
+    }
+
+    public List<Beer> getLikedBeers(Long memberId) {
+        return beerLikeRepository.findByMember_Id(memberId).stream().map(BeerLike::getBeer).collect(Collectors.toList());
     }
 }

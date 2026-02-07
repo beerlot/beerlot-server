@@ -19,9 +19,10 @@ public class HeaderUtils {
     }
 
     private static String removeTokenPrefix(String bearerToken) {
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
-            String token = bearerToken.substring(TOKEN_PREFIX.length() + 1);
-            return token;
+        if (StringUtils.hasText(bearerToken)
+                && bearerToken.startsWith(TOKEN_PREFIX)
+                && !bearerToken.trim().equals(TOKEN_PREFIX)) {
+            return bearerToken.substring(TOKEN_PREFIX.length() + 1);
         }
         return null;
     }

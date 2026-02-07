@@ -137,7 +137,7 @@ public class BeerCustomRepositoryImpl implements BeerCustomRepository {
     private BooleanExpression betweenVolumes(Integer volumeMin, Integer volumeMax) {
         if (volumeMin == null && volumeMax == null) return null;
         Integer _volumeMin = volumeMin == null ? 0 : volumeMin;
-        Integer _volumeMax = volumeMax == null ? 100 : volumeMin;
+        Integer _volumeMax = volumeMax == null ? 100 : volumeMax;
         return beer.volume.castToNum(Integer.class).between(_volumeMin, _volumeMax);
     }
 }

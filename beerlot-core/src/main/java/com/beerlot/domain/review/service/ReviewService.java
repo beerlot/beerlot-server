@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @Service
@@ -105,7 +106,7 @@ public class ReviewService {
         return reviewRepository.findAll(pageRequest, language);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Review findById(Long reviewId) {
         return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoSuchElementException(ErrorMessage.REVIEW__NOT_FOUND.getMessage()));
@@ -121,6 +122,19 @@ public class ReviewService {
                                                                 PageCustomRequest pageRequest,
                                                                 LanguageType language) {
         return reviewRepository.findByMember(oauthId, pageRequest, language);
+    }
+
+    @Transactional(readOnly = true)
+    public ReviewResponse getReviewByMemberAndBeerID(String oauthId, Long beerId) {
+        Beer beer = beerService.findBeerById(beerId);
+        Member member = memberService.findMemberByOauthId(oauthId);
+
+        Optional<Review> maybeReview = reviewRepository.findByBeer_IdAndMember_Id(beer.getId(), member.getId());
+        if (maybeReview.isEmpty()) {
+            throw new IllegalArgumentException(ErrorMessage.REVIEW__NOT_FOUND.getMessage());
+        }
+
+        return ReviewResponse.of(maybeReview.get());
     }
 
     @Transactional(readOnly = true)

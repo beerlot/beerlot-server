@@ -21,6 +21,9 @@ public class Glassware {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @OneToMany(mappedBy = "glassware")
     private List<GlasswareInternational> glasswareInternationals = new ArrayList<>();
 

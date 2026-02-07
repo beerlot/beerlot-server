@@ -24,7 +24,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info().title("BeerLot API")
                         .description("BeerLot API Document")
-                        .version("v0.0.1")
+                        .version("v1.1.0")
                         //.license(new License().name("Apache 2.0").url("http://springdoc.org"))
                 );
     }

@@ -5,16 +5,16 @@ import com.beerlot.domain.beer.BeerInternational;
 import com.beerlot.domain.category.dto.response.CategorySimpleResponse;
 import com.beerlot.domain.common.entity.LanguageType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Builder;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
-import java.util.List;
 import java.util.Set;
 
 public class BeerResponse {
 
     @Embedded
+    @JsonUnwrapped
     private BeerSimpleResponse beerSimpleResponse;
 
     @JsonProperty("description")
@@ -29,10 +29,10 @@ public class BeerResponse {
     @JsonProperty("volume")
     private Float volume;
 
-    @Column(name = "calorie")
+    @JsonProperty("calorie")
     private Integer calorie;
 
-    @Column(name = "calorie_unit")
+    @JsonProperty("calorie_unit")
     private Integer calorieUnit;
 
     @JsonProperty("buy_from")
@@ -97,7 +97,7 @@ public class BeerResponse {
                 .originCountry(beerInternational.getOriginCountry())
                 .originCity(beerInternational.getOriginCity())
                 .volume(beer.getVolume())
-                .brewery(beer.getBrewery())
+                .brewery(beer.getBrewery().getName(language))
                 .calorie(beer.getCalorie())
                 .calorieUnit(beer.getCalorieUnit())
                 .buyFrom(beer.getBuyFrom())

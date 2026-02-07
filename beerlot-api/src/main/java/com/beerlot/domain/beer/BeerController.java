@@ -29,7 +29,6 @@ public class BeerController implements BeerApi, BeerLikeApi, BeerRecommendApi {
     private final BeerRecommendService beerRecommendService;
     private final CategoryService categoryService;
 
-
     @Override
     public ResponseEntity<BeerResponse> findBeerById (LanguageType language, Long beerId) {
         LanguageType.validate(language);
@@ -51,9 +50,6 @@ public class BeerController implements BeerApi, BeerLikeApi, BeerRecommendApi {
                                                        Integer page, Integer size, BeerSortType sort, LanguageType language) {
         LanguageType.validate(language);
         PageCustom<BeerSimpleResponse> beerResponsePage = beerService.findBeersBySearch(keyword, categories, countries, volumeMin, volumeMax, language, new PageCustomRequest(page, size, sort));
-        if (beerResponsePage.getContents().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         return new ResponseEntity<>(new BeerPage(beerResponsePage.getContents(), beerResponsePage.getPageRequest(), beerResponsePage.getTotalElements()), HttpStatus.OK);
     }
 
@@ -70,12 +66,18 @@ public class BeerController implements BeerApi, BeerLikeApi, BeerRecommendApi {
     }
 
     @Override
-    public ResponseEntity<BeerRecommendResponse> recommendBeer (OAuthUserPrincipal userPrincipal, int amount) {
-        return new ResponseEntity<>(beerRecommendService.recommend(userPrincipal.getOauthId(), amount), HttpStatus.OK);
+    public ResponseEntity<BeerRecommendResponse> recommendBeer (OAuthUserPrincipal userPrincipal) {
+        return new ResponseEntity<>(beerRecommendService.recommend(userPrincipal.getOauthId()), HttpStatus.OK);
+
     }
 
     @Override
     public ResponseEntity<List<CategoryResponse>> getCategories(LanguageType language) {
         return new ResponseEntity<>(categoryService.getCategories(language), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<String>> getCountries(LanguageType language) {
+        return new ResponseEntity<>(beerService.getCountriesOfBeer(language), HttpStatus.OK);
     }
 }

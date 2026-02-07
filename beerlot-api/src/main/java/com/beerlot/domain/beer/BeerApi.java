@@ -1,6 +1,5 @@
 package com.beerlot.domain.beer;
 
-import com.beerlot.domain.beer.BeerSortType;
 import com.beerlot.domain.beer.dto.response.BeerPage;
 import com.beerlot.domain.beer.dto.response.BeerResponse;
 import com.beerlot.domain.beer.dto.response.BeerSimpleResponse;
@@ -80,5 +79,12 @@ public interface BeerApi {
             @RequestParam("size") Integer size,
             @RequestParam("sort") BeerSortType sort,
             @Parameter(description = "Language code") @RequestParam("language") LanguageType language
+    );
+
+    @Tag(name = "Beer API", description = "Get Countries Of Beer")
+    @Operation(description = "Get Countries Of Beer")
+    @GetMapping("/countries")
+    ResponseEntity<List<String>> getCountries(
+            @RequestParam(value = "language") LanguageType language
     );
 }

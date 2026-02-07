@@ -10,6 +10,10 @@ public enum ErrorMessage {
     BEER__NOT_EXIST("Beer does not exist."),
     BEER_INTERNATIONAL__NOT_EXIST("Beer international does not exist."),
 
+    // ===== Brewery ===== //
+    BREWERY__NOT_EXIST("Brewery does not exist."),
+    BREWERY_INTERNATIONAL__NOT_EXIST("Brewery international does not exist."),
+
     // ===== Beer Like ===== //
     BEER_LIKE__NOT_FOUND("Member has not liked the beer yet."),
     BEER_LIKE__CONFLICT("Member already liked the beer."),
@@ -36,6 +40,7 @@ public enum ErrorMessage {
     MEMBER__ACCESS_DENIED("Member has no proper rights."),
     MEMBER__USERNAME_30DAYS("Member already changed username within last 30 days."),
     MEMBER__USERNAME_ALREADY_EXIST("The username already exists."),
+    MEMBER__FAILED_TO_REVOKE_OAUTH("Failed to revoke user from OAuth Provider"),
 
     // ===== Token ===== //
     MEMBER_REFRESH_TOKEN__NOT_EXIST("Member refresh token does not exist."),
@@ -44,7 +49,7 @@ public enum ErrorMessage {
     TOKEN__EXPIRED("Token is expired."),
 
     // ===== Auth ===== //
-    UNAUTHORIZED_REDIRECT_URI("Redirect URI is authorized."),
+    UNAUTHORIZED_REDIRECT_URI("Redirect URI is not authorized."),
     NO_AUTHORIZATION("No Authorization was found."),
 
     // ===== File ===== //

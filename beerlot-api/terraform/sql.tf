@@ -4,8 +4,9 @@ resource "google_sql_database_instance" "beerlot_database_instance" {
   region           = var.region
 
   settings {
-    tier = "db-g1-small"
+    tier = "db-f1-micro"
   }
+  deletion_protection = true
 }
 
 resource "google_sql_database" "beerlot_database" {

@@ -4,7 +4,6 @@ import com.beerlot.annotation.CurrentUser;
 import com.beerlot.domain.auth.security.oauth.entity.OAuthUserPrincipal;
 import com.beerlot.domain.common.entity.LanguageType;
 import com.beerlot.domain.common.page.PageCustom;
-import com.beerlot.domain.review.ReviewSortType;
 import com.beerlot.domain.review.dto.request.ReviewRequest;
 import com.beerlot.domain.review.dto.response.ReviewResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -120,4 +119,18 @@ public interface ReviewApi {
             @RequestBody ReviewRequest reviewRequest
     );
 
+    @Tag(name = "Review API", description = "The Review API.")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(description = "Get my review by beer ID")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Success."),
+                    @ApiResponse(responseCode = "404", description = "Review does not exist."),
+            }
+    )
+    @GetMapping("/beers/{beerId}/reviews/me")
+    ResponseEntity<ReviewResponse> findMyReviewByBeerId (
+            @Parameter(hidden = true) @CurrentUser OAuthUserPrincipal userPrincipal,
+            @Parameter(description = "Beer ID") @PathVariable("beerId") Long beerId
+    );
 }

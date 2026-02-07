@@ -91,7 +91,14 @@ public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
     private boolean isAuthorized(String url) {
         URI clientRedirectUri = URI.create(url);
         URI authorizedRedirectedUrl = URI.create(appConfig.getRedirectUrl());
-        return authorizedRedirectedUrl.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+
+        boolean checkAuthorization = authorizedRedirectedUrl.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
                 && authorizedRedirectedUrl.getPort() == clientRedirectUri.getPort();
+
+        if (!checkAuthorization) {
+            log.error("client redirect URL is not authorized, client Redirect URL : {}, authorized : {}", url, appConfig.getRedirectUrl());
+        }
+
+        return checkAuthorization;
     }
 }

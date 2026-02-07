@@ -3,7 +3,10 @@ package com.beerlot.domain.category.service;
 import com.beerlot.domain.category.Category;
 import com.beerlot.domain.category.CategoryInternational;
 import com.beerlot.domain.category.CategoryInternationalId;
+import com.beerlot.domain.category.dto.response.CategoryPediaResponse;
 import com.beerlot.domain.category.dto.response.CategoryResponse;
+import com.beerlot.domain.category.dto.response.CategorySearchResponse;
+import com.beerlot.domain.category.repository.CategoryInternationalCustomRepository;
 import com.beerlot.domain.category.repository.CategoryInternationalRepository;
 import com.beerlot.domain.category.repository.CategoryRepository;
 import com.beerlot.domain.common.entity.LanguageType;
@@ -23,6 +26,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryInternationalRepository categoryInternationalRepository;
+    private final CategoryInternationalCustomRepository categoryInternationalCustomRepository;
 
     public Category findCategoryById(Long id) {
         return categoryRepository.findById(id)
@@ -30,7 +34,7 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    private CategoryInternational findCategoryInternationalByKey(Long id, LanguageType language) {
+    public CategoryInternational findCategoryInternationalByKey(Long id, LanguageType language) {
         return categoryInternationalRepository.findById(new CategoryInternationalId(id, language))
                 .orElseThrow(() -> new NoSuchElementException(ErrorMessage.CATEGORY_INTERNATIONAL__NOT_EXIST.getMessage()));
     }
@@ -41,6 +45,23 @@ public class CategoryService {
                 .stream()
                 .map(o -> CategoryResponse.of(languageType, o))
                 .filter(o -> !Objects.isNull(o))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategorySearchResponse> getCategoryByName(String name, LanguageType language) {
+        return categoryInternationalCustomRepository.findByNameAndLanguageType(name, language)
+                .stream()
+                .map(CategorySearchResponse::of)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<CategoryPediaResponse> getCategoryDetail(Long categoryId, LanguageType language) {
+        List<CategoryInternational> foundCategories = categoryInternationalRepository.findByCategoryIdAndLanguage(categoryId, language);
+
+        return foundCategories.stream()
+                .map(CategoryPediaResponse::of)
                 .toList();
     }
 }

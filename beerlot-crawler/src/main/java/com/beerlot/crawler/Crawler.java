@@ -42,6 +42,7 @@ public class Crawler {
         System.setProperty(DRIVER_ID, DRIVER_PATH);
 
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
         //options.addArguments("headless"); // If headless, then no browser is on.
 
         driver = new ChromeDriver(options);

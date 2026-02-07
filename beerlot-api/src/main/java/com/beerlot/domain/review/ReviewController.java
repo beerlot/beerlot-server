@@ -49,6 +49,11 @@ public class ReviewController implements ReviewApi, ReviewLikeApi {
     }
 
     @Override
+    public ResponseEntity<ReviewResponse> findMyReviewByBeerId(OAuthUserPrincipal userPrincipal, Long beerId) {
+        return new ResponseEntity<>(reviewService.getReviewByMemberAndBeerID(userPrincipal.getOauthId(), beerId), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<PageCustom<ReviewResponse>> findAllReviews(Integer page, Integer size, ReviewSortType sort, LanguageType language) {
         LanguageType.validate(language);
         try {
